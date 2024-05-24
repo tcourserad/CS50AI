@@ -14,6 +14,7 @@ def initial_state():
     """
     Returns starting state of the board.
     """
+
     return [[EMPTY, EMPTY, EMPTY],
             [EMPTY, EMPTY, EMPTY],
             [EMPTY, EMPTY, EMPTY]]
@@ -66,14 +67,55 @@ def result(board, action):
     new_board[action[0]][action[1]] = player(board)
     return new_board
 
-
 def winner(board):
     """
     Returns the winner of the game, if there is one.
     """
+
+    # Check rows:
+    for row in board:
+      if row.count(X) == 3:
+        return X
+      if row.count(O) == 3:
+        return O
+
+    # Check columns:
+    for j in range(3):
+      column = ''
+      for i in range(3):
+        column += str(board[i][j])
+
+      if column == 'XXX':
+        return X
+      if column == 'OOO':
+        return O
+
+    # Check Diagonals:
+    diag1 = ''
+    diag2 = ''
+    j = 2
+
+    for i in range(3):
+      diag1 += str(board[i][i])
+      diag2 += str(board[i][j])
+      j -= 1
+
+    if diag1 == 'XXX' or diag2 == 'XXX':
+      return X
+    elif diag1 == 'OOO' or diag2 == 'OOO':
+      return O
+
+    # Otherwise no current winner, return None
+    return None
+
+def td_winner(board):
+    """
+    Returns the winner of the game, if there is one.
+    """
     #rows
-    for (i, row) in enumerate(board):
-            if len(set(row)) == 1: return row[0]
+    for row in board:
+      if row.count(X) == 3: return X
+      if row.count(O) == 3: return O
 
     #columns       
     for j in (0,1,2):
