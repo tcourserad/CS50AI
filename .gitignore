@@ -1,1 +1,3 @@
-0 Search/Project 0/tictactoe/requirements.txt
+.gitignore
+0 Search/Project 0/tictactoe/__pycache__/tictactoe.cpython-311.pyc
+1 Knowledge/Project 1/minesweeper/__pycache__/minesweeper.cpython-311.pyc
