@@ -106,57 +106,65 @@ def utility(board):
     
     return 0
 
-
-pos_inf = float('inf')
-neg_inf = float('-inf')
-
-def maxvalue(board, level):
-    level += 1
-    if terminal(board):
-        return utility(board)
-    v = neg_inf
-    for action in actions(board):
-        action_result = result (board, action)
-        result_v = minvalue(action_result, level)
-        v = max(v, result_v)
-
-    return v 
-
-def minvalue(board, level):
-    level += 1
-    if terminal(board):
-       return utility(board)
-    v = pos_inf
-    for action in actions(board):
-        action_result = result (board, action)
-        result_v = maxvalue(action_result, level)
-        v = min(v, result_v)
-    
-    return v
-
 def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
-    level = 0
-    optimal_action = None
-    if terminal(board): 
-        return None
-    if player(board) == X:
+
+    pos_inf = float('inf')
+    neg_inf = float('-inf')
+
+    def maxvalue(board, alpha, beta):
+        if terminal(board):
+            return utility(board)
         v = neg_inf
         for action in actions(board):
             action_result = result (board, action)
-            result_v = minvalue(action_result, level)
-            if result_v > v:
-                optimal_action = action
-                v = result_v
-    else:
+            result_v = minvalue(action_result, alpha, beta)
+            v = max(v, result_v)
+            if alpha >= beta: break # Alpha-Beta Pruning
+            alpha = max(alpha, v)
+                        
+        return v 
+    
+    def minvalue(board, alpha, beta):
+        if terminal(board):
+            return utility(board)
         v = pos_inf
         for action in actions(board):
             action_result = result (board, action)
-            result_v = maxvalue(action_result, level)
-            if result_v < v:
+            result_v = maxvalue(action_result, alpha, beta)
+            v = min(v, result_v)
+            if beta <= alpha: break # Alpha-Beta Pruning
+            beta = min(beta, result_v)
+            
+        return v  
+    
+
+    optimal_action = None
+    if terminal(board): 
+        return None
+    
+    alpha = neg_inf
+    beta = pos_inf
+
+    if player(board) == X:
+        
+        for action in actions(board):
+            action_result = result (board, action)
+            result_v = minvalue(action_result, alpha, beta)
+            if result_v > alpha:
                 optimal_action = action
-                v = result_v
+                alpha = result_v
+            
+    else:
+        
+        for action in actions(board):
+            action_result = result (board, action)
+            result_v = maxvalue(action_result, alpha, beta)
+            if result_v < beta:
+                optimal_action = action
+                beta = result_v
     
     return optimal_action  
+
